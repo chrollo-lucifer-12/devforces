@@ -1,10 +1,7 @@
 
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../generated/prisma"
-  moduleFormat = "esm"
-  generatedFileExtension = "ts"
-  importFileExtension = "ts"
 }
 
 datasource db {
@@ -18,11 +15,19 @@ model User {
   image         String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  admin Admin?
   sessions      Session[]
   accounts      Account[]
 
   @@unique([email])
   @@map("user")
+}
+
+model Admin {
+ user      User   @relation(fields: [userId], references: [id])
+ userId  String @unique
+
+ @@map("admin")
 }
 
 model Session {
@@ -40,6 +45,7 @@ model Session {
   @@index([userId])
   @@map("session")
 }
+
 
 model Account {
   id                    String    @id

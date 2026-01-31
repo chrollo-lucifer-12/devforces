@@ -12,7 +12,8 @@
   },
   "devDependencies": {
     "@repo/eslint-config": "*",
-    "@repo/typescript-config": "*"
+    "@repo/typescript-config": "*",
+    "prisma": "^7.3.0"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.3.0",
@@ -20,7 +21,6 @@
     "@types/node": "^25.1.0",
     "@types/pg": "^8.16.0",
     "dotenv": "^17.2.3",
-    "pg": "^8.18.0",
-    "prisma": "^7.3.0"
+    "pg": "^8.18.0"
   }
 }

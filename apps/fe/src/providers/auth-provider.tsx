@@ -7,6 +7,10 @@ import type { ReactNode } from "react";
 import { authClient } from "@repo/auth/auth-client";
 import { AuthUIProvider } from "@repo/ui/better-auth-ui";
 
+const socialOptions = {
+  providers: ["github"],
+};
+
 function BetterAuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
 
@@ -19,6 +23,9 @@ function BetterAuthProvider({ children }: { children: ReactNode }) {
         router.refresh();
       }}
       Link={Link}
+      emailOTP
+      social={socialOptions}
+      baseURL="/"
     >
       {children}
     </AuthUIProvider>
