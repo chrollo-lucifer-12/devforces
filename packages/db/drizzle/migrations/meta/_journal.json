@@ -15,6 +15,13 @@
       "when": 1769964526926,
       "tag": "0001_slow_exiles",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1769978214114,
+      "tag": "0002_furry_bushwacker",
+      "breakpoints": true
     }
   ]
 }

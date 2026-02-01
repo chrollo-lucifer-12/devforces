@@ -5,14 +5,8 @@ import {
 } from "@repo/ui/components/ui/sidebar";
 import { AppSidebar } from "../../../components/admin-sidebar/app-sidebar";
 import { Separator } from "@repo/ui/components/ui/separator";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@repo/ui/components/ui/breadcrumb";
+
+import BreadCrumbs from "../../../components/breadcrumbs";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -28,19 +22,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 orientation="vertical"
                 className="mr-2 data-[orientation=vertical]:h-4"
               />
-              <Breadcrumb>
-                <BreadcrumbList>
-                  <BreadcrumbItem className="hidden md:block">
-                    <BreadcrumbLink href="#">
-                      Building Your Application
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator className="hidden md:block" />
-                  <BreadcrumbItem>
-                    <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                  </BreadcrumbItem>
-                </BreadcrumbList>
-              </Breadcrumb>
+              <BreadCrumbs />
             </div>
           </header>
           {children}

@@ -184,6 +184,10 @@ export const challenge = pgTable(
     name: text().notNull(),
     contestId: text().notNull(),
     statementLink: text().notNull(),
+    createdAt: timestamp({ precision: 3, mode: "string" })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp({ precision: 3, mode: "string" }).notNull(),
   },
   (table) => [
     foreignKey({
