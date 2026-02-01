@@ -1,6 +1,6 @@
 import { createAuth } from "@repo/auth/auth";
 import { db } from "./db";
-import { env } from "./env";
+import { env } from "./env/server";
 
 export const auth = createAuth(
   {

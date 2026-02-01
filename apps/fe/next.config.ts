@@ -1,9 +1,9 @@
 import type { NextConfig } from "next";
-import { EnvSchema } from "@repo/validator";
+import { ClientEnvSchema, ServerEnvSchema } from "@repo/validator";
 
 (() => {
-  const parsed = EnvSchema.safeParse(process.env);
-
+  const combine = ClientEnvSchema.extend(ServerEnvSchema.shape);
+  const parsed = combine.safeParse(process.env);
   if (!parsed.success) {
     console.error("❌ Invalid environment variables:");
     console.error(parsed.error.flatten().fieldErrors);
@@ -14,6 +14,13 @@ import { EnvSchema } from "@repo/validator";
 const nextConfig: NextConfig = {
   /* config options here */
   reactCompiler: true,
+  logging: {
+    fetches: {
+      fullUrl: true,
+      hmrRefreshes: true,
+    },
+    incomingRequests: true,
+  },
 };
 
 export default nextConfig;
