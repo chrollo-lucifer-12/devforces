@@ -1,3 +1,4 @@
+import AllContestsPage from "../../../components/all-contests-page";
 import { logger } from "../../../lib/logger";
 
 const log = logger.child({ module: "totoro" });
@@ -9,15 +10,15 @@ const AdminPage = async ({
 }) => {
   const { challenge, contest } = await searchParams;
 
-  if (challenge) {
+  if (challenge && challenge === "all") {
     return null;
   }
 
-  if (contest) {
-    return null;
+  if (contest && contest === "all") {
+    return <AllContestsPage />;
   }
 
-  return <div className=""></div>;
+  return null;
 };
 
 export default AdminPage;
