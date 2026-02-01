@@ -1,5 +1,5 @@
 import { auth } from "@repo/auth/auth";
-import { prisma } from "@repo/db";
+import { admin, db, eq } from "@repo/db";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -14,9 +14,10 @@ const AdminPage = async () => {
 
   const userId = session.user.id;
 
-  const checkAdmin = await prisma.admin.findUnique({
-    where: { userId },
-  });
+  const checkAdmin = await db
+    .select()
+    .from(admin)
+    .where(eq(admin.userId, userId));
 
   if (!checkAdmin) {
     redirect("/auth/sign-in");

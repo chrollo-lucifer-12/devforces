@@ -1,2 +1,6 @@
-export { prisma } from "./server"; // exports instance of prisma
-export * from "../generated/prisma/client"; // exports generated types from prisma
+import "dotenv/config";
+import { drizzle } from "drizzle-orm/node-postgres";
+
+export const db = drizzle(process.env.DATABASE_URL!);
+export * from "./db/schema";
+export * from "drizzle-orm";
