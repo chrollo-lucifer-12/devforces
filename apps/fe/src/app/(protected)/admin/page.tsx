@@ -1,30 +1,14 @@
-import { admin, eq } from "@repo/db";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
-import { auth } from "../../../lib/auth";
-import { db } from "../../../lib/db";
-
 const AdminPage = async () => {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (!session || !session.session || !session.user) {
-    redirect("/auth/sign-in");
-  }
-
-  const userId = session.user.id;
-
-  const checkAdmin = await db
-    .select()
-    .from(admin)
-    .where(eq(admin.userId, userId));
-
-  if (!checkAdmin) {
-    redirect("/auth/sign-in");
-  }
-
-  return <div></div>;
+  return (
+    <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+      <div className="grid auto-rows-min gap-4 md:grid-cols-3">
+        <div className="aspect-video rounded-xl bg-muted/50" />
+        <div className="aspect-video rounded-xl bg-muted/50" />
+        <div className="aspect-video rounded-xl bg-muted/50" />
+      </div>
+      <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min"></div>
+    </div>
+  );
 };
 
 export default AdminPage;

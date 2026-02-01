@@ -1,6 +1,6 @@
 import { betterAuth } from "better-auth";
 import { DB, drizzleAdapter } from "better-auth/adapters/drizzle";
-import { user, account, admin, session } from "@repo/db";
+import { user, account, admin, session, verification } from "@repo/db";
 
 export type AuthConfig = {
   githubClientId: string;
@@ -16,6 +16,7 @@ export function createAuth(config: AuthConfig, db: DB) {
         account,
         admin,
         session,
+        verification,
       },
     }),
     emailAndPassword: {
