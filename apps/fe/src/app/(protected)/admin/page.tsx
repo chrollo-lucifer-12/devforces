@@ -1,7 +1,8 @@
-import { auth } from "@repo/auth/auth";
-import { admin, db, eq } from "@repo/db";
+import { admin, eq } from "@repo/db";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { auth } from "../../../lib/auth";
+import { db } from "../../../lib/db";
 
 const AdminPage = async () => {
   const session = await auth.api.getSession({

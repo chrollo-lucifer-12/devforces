@@ -10,7 +10,8 @@
   "devDependencies": {
     "@repo/db": "*",
     "@repo/eslint-config": "*",
-    "@repo/typescript-config": "*"
+    "@repo/typescript-config": "*",
+    "@repo/validator": "*"
   },
   "dependencies": {
     "better-auth": "^1.4.18"

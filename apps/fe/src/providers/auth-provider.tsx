@@ -4,8 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { ReactNode } from "react";
 
-import { authClient } from "@repo/auth/auth-client";
 import { AuthUIProvider } from "@repo/ui/better-auth-ui";
+import { authClient } from "../lib/auth-client";
 
 const socialOptions = {
   providers: ["github"],

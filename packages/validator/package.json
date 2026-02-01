@@ -1,0 +1,16 @@
+{
+  "name": "@repo/validator",
+  "version": "1.0.0",
+  "devDependencies": {
+    "@repo/eslint-config": "*",
+    "@repo/typescript-config": "*",
+    "@types/node": "^25.1.0",
+    "typescript": "~5.9.3"
+  },
+  "dependencies": {
+    "zod": "^4.3.6"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}
