@@ -154,3 +154,82 @@ export const admin = pgTable(
       .onDelete("restrict"),
   ],
 );
+
+export const contest = pgTable(
+  "contest",
+  {
+    id: text().primaryKey().notNull(),
+    name: text().notNull(),
+    creatorId: text().notNull(),
+    createdAt: timestamp({ precision: 3, mode: "string" })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp({ precision: 3, mode: "string" }).notNull(),
+    status: text(),
+    gitUrl: text().notNull(),
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.creatorId],
+      foreignColumns: [admin.userId],
+      name: "contest_admin_fkey",
+    }),
+  ],
+);
+
+export const challenge = pgTable(
+  "challenge",
+  {
+    id: text().primaryKey().notNull(),
+    name: text().notNull(),
+    contestId: text().notNull(),
+    statementLink: text().notNull(),
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.contestId],
+      foreignColumns: [contest.id],
+      name: "challenges_contest_fkey",
+    }),
+  ],
+);
+
+export const test = pgTable(
+  "test",
+  {
+    id: text().primaryKey().notNull(),
+    challengeId: text().notNull(),
+    testLink: text().notNull(),
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.challengeId],
+      foreignColumns: [challenge.id],
+    }),
+  ],
+);
+
+export const submission = pgTable(
+  "submission",
+  {
+    id: text().primaryKey().notNull(),
+    challengeId: text().notNull(),
+    userId: text().notNull(),
+    prLinkL: text().notNull(),
+    score: integer(),
+    createdAt: timestamp({ precision: 3, mode: "string" })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp({ precision: 3, mode: "string" }).notNull(),
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.challengeId],
+      foreignColumns: [challenge.id],
+    }),
+    foreignKey({
+      columns: [table.userId],
+      foreignColumns: [user.id],
+    }),
+  ],
+);
