@@ -7,14 +7,10 @@ import { AppSidebar } from "../../../components/admin-sidebar/app-sidebar";
 import { Separator } from "@repo/ui/components/ui/separator";
 
 import BreadCrumbs from "../../../components/breadcrumbs";
-import { SearchIcon } from "lucide-react";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@repo/ui/components/ui/input-group";
-import { Kbd } from "@repo/ui/components/ui/kbd";
+
 import SearchContests from "../../../components/admin-sidebar/search-contests";
+
+export const dynamic = "force-dynamic";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (

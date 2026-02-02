@@ -43,6 +43,13 @@
       "when": 1770053530269,
       "tag": "0005_wise_black_panther",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1770063515859,
+      "tag": "0006_military_killraven",
+      "breakpoints": true
     }
   ]
 }

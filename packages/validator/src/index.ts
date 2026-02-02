@@ -13,3 +13,5 @@ export const ClientEnvSchema = z.object({
     .string()
     .min(1, { error: "url must not be empty" }),
 });
+
+export * from "zod";

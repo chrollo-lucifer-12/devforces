@@ -1,3 +1,5 @@
+import z from "zod";
+
 export type Contest = {
   contest: {
     id: string;
@@ -32,3 +34,13 @@ export type ContestInfo = {
   submissionsCount: number;
   participantsCount: number;
 };
+
+export type CreateContestInput = {
+  name: string;
+  gitURL: string;
+};
+
+export const createContestSchema = z.object({
+  name: z.string().min(1, { error: "Contest name cannot be empty" }),
+  gitUrl: z.string().min(1, { error: "Git URL cannot be empty" }),
+});

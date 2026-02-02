@@ -172,11 +172,13 @@ export const contest = pgTable(
     createdAt: timestamp({ precision: 3, mode: "string" })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: timestamp({ precision: 3, mode: "string" }).notNull(),
+    updatedAt: timestamp({ precision: 3, mode: "string" })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
     status: contestStatusEnum("status").default("DRAFT").notNull(),
     gitUrl: text().notNull(),
-    startDate: timestamp({ precision: 3, mode: "string" }).notNull(),
-    endDate: timestamp({ precision: 3, mode: "string" }).notNull(),
+    startDate: timestamp({ precision: 3, mode: "string" }),
+    endDate: timestamp({ precision: 3, mode: "string" }),
   },
   (table) => [
     foreignKey({
@@ -216,7 +218,9 @@ export const challenge = pgTable(
     createdAt: timestamp({ precision: 3, mode: "string" })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: timestamp({ precision: 3, mode: "string" }).notNull(),
+    updatedAt: timestamp({ precision: 3, mode: "string" })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
   },
   (table) => [
     foreignKey({

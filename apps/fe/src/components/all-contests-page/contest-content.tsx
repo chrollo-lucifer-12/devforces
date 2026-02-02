@@ -20,6 +20,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@repo/ui/components/ui/empty";
+import CreateContest from "../create-contest";
 
 const ContestContent = ({
   isLoading,
@@ -116,7 +117,9 @@ const ContestContent = ({
             <EmptyTitle>{emptyMessage}</EmptyTitle>
           </EmptyHeader>
           <EmptyContent className="flex-row justify-center gap-2">
-            <Button>Create Contest</Button>
+            <CreateContest>
+              <Button>Create Contest</Button>
+            </CreateContest>
           </EmptyContent>
         </Empty>
       )}
