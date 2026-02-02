@@ -15,10 +15,9 @@ import {
 } from "@repo/ui/components/ui/sidebar";
 
 import { UserButton } from "@repo/ui/better-auth-ui";
-import { useContest } from "../../hooks/queries";
+
 import NavDashboard from "./nav-dashboard";
 import NavContest from "./nav-contest";
-import NavChallenge from "./nav-challenge";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -45,7 +44,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenu>
             <NavDashboard />
             <NavContest />
-            <NavChallenge />
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>

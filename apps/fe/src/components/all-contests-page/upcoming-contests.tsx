@@ -18,6 +18,7 @@ const UpcomingContests = () => {
         <ContestContent
           data={contestQuery.data}
           isLoading={contestQuery.isLoading}
+          emptyMessage="No Upcoming contests yet"
         />
       </Card>
     </div>

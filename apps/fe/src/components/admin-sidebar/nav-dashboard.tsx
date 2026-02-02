@@ -31,20 +31,6 @@ const NavDashboard = () => {
           </SidebarMenuSubButton>
         </SidebarMenuSubItem>
       </SidebarMenuSub>
-      <SidebarMenuSub>
-        <SidebarMenuSubItem>
-          <SidebarMenuSubButton
-            isActive={isChallengeActive}
-            asChild
-            onClick={() => {
-              router.push("?challenge=all");
-            }}
-            className="cursor-pointer"
-          >
-            <p>All Challenges</p>
-          </SidebarMenuSubButton>
-        </SidebarMenuSubItem>
-      </SidebarMenuSub>
     </SidebarMenuItem>
   );
 };

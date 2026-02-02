@@ -9,7 +9,7 @@ import ContestContent from "./contest-content";
 import ContestInfo from "./contest-info";
 
 const LiveContests = () => {
-  const contestQuery = useContest("all", "LIVE");
+  const contestQuery = useContest("all", "LIVE", "");
   const [selectedContest, setSelectedContest] = useState<string>();
 
   return (
@@ -24,6 +24,7 @@ const LiveContests = () => {
           onItemSelect={(id: string) => {
             setSelectedContest(id);
           }}
+          emptyMessage="No Live Contests Yet"
         />
       </Card>
       <ContestInfo

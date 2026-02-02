@@ -18,7 +18,7 @@ const NavContest = () => {
       <NavRenderer
         error={contestQuery.error}
         emptyMessage="No Contests Available"
-        isEmpty={false}
+        isEmpty={!contestQuery.isLoading && contestQuery.data?.length === 0}
         isLoading={contestQuery.isLoading}
         Content={contestQuery.data?.map((contest) => (
           <NavContestButton key={contest.contest.id} contest={contest} />

@@ -1,8 +1,14 @@
 import useSWR from "swr";
 import { Challenge, Contest, ContestInfo } from "../lib/types";
 
-export function useContest(id: string, status: string = "") {
-  return useSWR<Contest[]>(`/api/contest?id=${id}&status=${status}`);
+export function useContest(
+  id: string = "",
+  status: string = "",
+  name: string = "",
+) {
+  return useSWR<Contest[]>(
+    `/api/contest?id=${id}&status=${status}&name=${name}`,
+  );
 }
 
 export function useChallenge(id: string) {

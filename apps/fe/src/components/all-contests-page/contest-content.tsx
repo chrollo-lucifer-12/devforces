@@ -11,17 +11,29 @@ import { Skeleton } from "@repo/ui/components/ui/skeleton";
 import { Badge } from "@repo/ui/components/ui/badge";
 import { Avatar, AvatarImage } from "@repo/ui/components/ui/avatar";
 import { Button } from "@repo/ui/components/ui/button";
-import { ArrowUpRightIcon, ChevronRight } from "lucide-react";
+import { ArrowUpRightIcon, ChevronRight, FolderCodeIcon } from "lucide-react";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@repo/ui/components/ui/empty";
 
 const ContestContent = ({
   isLoading,
   data,
   onItemSelect,
+  emptyMessage,
 }: {
   isLoading: boolean;
   data: Contest[] | undefined;
   onItemSelect?: (s: string) => void;
+  emptyMessage: string;
 }) => {
+  const isEmpty = data?.length === 0 && !isLoading;
+
   return (
     <CardContent className="flex flex-col gap-2 max-h-60 overflow-y-auto">
       {isLoading &&
@@ -94,6 +106,20 @@ const ContestContent = ({
             </Item>
           );
         })}
+
+      {isEmpty && (
+        <Empty>
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <FolderCodeIcon />
+            </EmptyMedia>
+            <EmptyTitle>{emptyMessage}</EmptyTitle>
+          </EmptyHeader>
+          <EmptyContent className="flex-row justify-center gap-2">
+            <Button>Create Contest</Button>
+          </EmptyContent>
+        </Empty>
+      )}
     </CardContent>
   );
 };
