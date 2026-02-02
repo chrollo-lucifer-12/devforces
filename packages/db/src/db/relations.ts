@@ -8,6 +8,7 @@ import {
   challenge,
   test,
   submission,
+  registration,
 } from "./schema";
 
 export const sessionRelations = relations(session, ({ one }) => ({
@@ -22,6 +23,7 @@ export const userRelations = relations(user, ({ many }) => ({
   accounts: many(account),
   admins: many(admin),
   submission: many(submission),
+  registration: many(registration),
 }));
 
 export const accountRelations = relations(account, ({ one }) => ({
@@ -45,6 +47,8 @@ export const contestRelations = relations(contest, ({ one, many }) => ({
     references: [admin.userId],
   }),
   challenge: many(challenge),
+  registration: many(registration),
+  submission: many(submission),
 }));
 
 export const challengeRelations = relations(challenge, ({ one, many }) => ({
@@ -71,5 +75,20 @@ export const submissionRelations = relations(submission, ({ one }) => ({
   challenge: one(challenge, {
     fields: [submission.challengeId],
     references: [challenge.id],
+  }),
+  contest: one(contest, {
+    fields: [submission.challengeId],
+    references: [contest.id],
+  }),
+}));
+
+export const registrationRelations = relations(registration, ({ one }) => ({
+  user: one(user, {
+    fields: [registration.userId],
+    references: [user.id],
+  }),
+  contest: one(contest, {
+    fields: [registration.contestId],
+    references: [contest.id],
   }),
 }));

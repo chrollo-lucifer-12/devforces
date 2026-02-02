@@ -16,6 +16,7 @@ import {
   BadgeCheck,
   Clock,
   PlayCircle,
+  PlayIcon,
   XCircle,
 } from "lucide-react";
 import {
@@ -31,19 +32,13 @@ export const contestStatusMap = {
       "bg-yellow-50 text-yellow-700 dark:bg-yellow-950 dark:text-yellow-300",
     Icon: Clock,
   },
-  ONGOING: {
-    label: "Ongoing",
-    className:
-      "bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300",
-    Icon: PlayCircle,
-  },
-  COMPLETED: {
-    label: "Completed",
+  LIVE: {
+    label: "Live",
     className: "bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300",
-    Icon: BadgeCheck,
+    Icon: PlayIcon,
   },
-  CANCELLED: {
-    label: "Cancelled",
+  DRAFT: {
+    label: "Draft",
     className: "bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300",
     Icon: XCircle,
   },

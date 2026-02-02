@@ -5,8 +5,10 @@ export type Contest = {
     creatorId: string;
     createdAt: string;
     updatedAt: string;
-    status: string | null;
+    status: "UPCOMING" | "LIVE" | "DRAFT";
     gitUrl: string;
+    startDate: string;
+    endDate: string;
   };
   creator: {
     name: string;
@@ -21,4 +23,12 @@ export type Challenge = {
   statementLink: string;
   createdAt: string;
   updatedAt: string;
+};
+
+export type ContestInfo = {
+  name: string;
+  startDate: string;
+  endDate: string;
+  submissionsCount: number;
+  participantsCount: number;
 };

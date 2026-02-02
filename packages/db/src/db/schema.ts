@@ -8,8 +8,10 @@ import {
   uniqueIndex,
   boolean,
   foreignKey,
+  pgEnum,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
+import { primaryKey } from "drizzle-orm/sqlite-core";
 
 export const prismaMigrations = pgTable("_prisma_migrations", {
   id: varchar({ length: 36 }).primaryKey().notNull(),
@@ -155,6 +157,12 @@ export const admin = pgTable(
   ],
 );
 
+export const contestStatusEnum = pgEnum("contest_status", [
+  "LIVE",
+  "UPCOMING",
+  "DRAFT",
+]);
+
 export const contest = pgTable(
   "contest",
   {
@@ -165,14 +173,35 @@ export const contest = pgTable(
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp({ precision: 3, mode: "string" }).notNull(),
-    status: text(),
+    status: contestStatusEnum("status").default("DRAFT").notNull(),
     gitUrl: text().notNull(),
+    startDate: timestamp({ precision: 3, mode: "string" }).notNull(),
+    endDate: timestamp({ precision: 3, mode: "string" }).notNull(),
   },
   (table) => [
     foreignKey({
       columns: [table.creatorId],
       foreignColumns: [admin.userId],
       name: "contest_admin_fkey",
+    }),
+  ],
+);
+
+export const registration = pgTable(
+  "registration",
+  {
+    userId: text().notNull(),
+    contestId: text().notNull(),
+    isParticipating: boolean(),
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.contestId],
+      foreignColumns: [contest.id],
+    }),
+    foreignKey({
+      columns: [table.userId],
+      foreignColumns: [user.id],
     }),
   ],
 );
@@ -218,6 +247,7 @@ export const submission = pgTable(
   {
     id: text().primaryKey().notNull(),
     challengeId: text().notNull(),
+    contestId: text().notNull(),
     userId: text().notNull(),
     prLinkL: text().notNull(),
     score: integer(),
@@ -234,6 +264,10 @@ export const submission = pgTable(
     foreignKey({
       columns: [table.userId],
       foreignColumns: [user.id],
+    }),
+    foreignKey({
+      columns: [table.contestId],
+      foreignColumns: [contest.id],
     }),
   ],
 );

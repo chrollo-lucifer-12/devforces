@@ -14,14 +14,6 @@ import { ClientEnvSchema, ServerEnvSchema } from "@repo/validator";
 const nextConfig: NextConfig = {
   /* config options here */
   reactCompiler: true,
-  logging: {
-    fetches: {
-      fullUrl: true,
-      hmrRefreshes: true,
-    },
-    incomingRequests: true,
-  },
-  serverExternalPackages: ["pino", "pino-pretty"],
 };
 
 export default nextConfig;

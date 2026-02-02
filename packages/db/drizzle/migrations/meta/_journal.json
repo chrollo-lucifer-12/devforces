@@ -22,6 +22,27 @@
       "when": 1769978214114,
       "tag": "0002_furry_bushwacker",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1770043842449,
+      "tag": "0003_lively_freak",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1770052968009,
+      "tag": "0004_fancy_invisible_woman",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1770053530269,
+      "tag": "0005_wise_black_panther",
+      "breakpoints": true
     }
   ]
 }

@@ -3,7 +3,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@repo/ui/components/ui/hover-card";
-import { Challenge, Contest } from "../../lib/types";
+import { Challenge } from "../../lib/types";
 import {
   SidebarMenuSub,
   SidebarMenuSubButton,
