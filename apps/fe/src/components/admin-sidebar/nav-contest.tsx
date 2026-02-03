@@ -6,6 +6,10 @@ import {
 import { useContest } from "../../hooks/queries";
 import NavContestButton from "./nav-contest-button";
 import NavRenderer from "./nav-renderer";
+import { preload } from "swr";
+import { fetcher } from "../../lib/fetcher";
+
+preload("/api/contest?id=all", fetcher);
 
 const NavContest = () => {
   const contestQuery = useContest("all");

@@ -1,16 +1,22 @@
 import useSWRMutation from "swr/mutation";
 import { toast } from "sonner";
-import { createContest } from "../actions/contest";
+import { createContest, updateContest } from "../actions/contest";
 import { mutate } from "swr";
 import { CreateContestInput } from "../lib/types";
 import { useRouter } from "next/navigation";
-import { Spinner } from "@/components/ui/spinner";
 
 const createContestFetcher = async (
   _key: string,
   { arg }: { arg: CreateContestInput },
 ) => {
   return createContest(arg);
+};
+
+const updateContestFetcher = async (
+  _key: string,
+  { arg }: { arg: { gitUrl: string; id: string } },
+) => {
+  return updateContest(arg);
 };
 
 export const useCreateContest = () => {
@@ -24,19 +30,20 @@ export const useCreateContest = () => {
       mutate(
         (key) => typeof key === "string" && key.startsWith("/api/contest"),
       );
-      toast.success("Contest created succcessfully");
-      await toast.promise(
-        async () => {
-          await router.push(`?contest=${data.id}`);
+      router.push(`?contest=${data.id}`);
+    },
+  });
+};
 
-          return { name: data.name };
-        },
-        {
-          loading: "Redirecting...",
-          success: (res) => `Redirected to ${res.name}!`,
-          error: "Failed to redirect",
-        },
-      );
+export const useUpdateContest = (id: string) => {
+  return useSWRMutation(`/api/contest?id=${id}`, updateContestFetcher, {
+    throwOnError: false,
+    onError: (error) => {
+      toast.error(error?.message ?? "Failed to update contest");
+    },
+    onSuccess: async (data) => {
+      mutate(`/api/contest?id=${id}`);
+      toast.success("Git repository was verified and updated successfully");
     },
   });
 };

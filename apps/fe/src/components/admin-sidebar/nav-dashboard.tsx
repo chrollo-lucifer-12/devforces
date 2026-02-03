@@ -11,7 +11,7 @@ const NavDashboard = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const isContestActive = searchParams.get("contest") === "all";
-  const isChallengeActive = searchParams.get("challenge") === "all";
+
   return (
     <SidebarMenuItem>
       <SidebarMenuButton asChild>

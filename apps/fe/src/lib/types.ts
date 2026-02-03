@@ -37,10 +37,16 @@ export type ContestInfo = {
 
 export type CreateContestInput = {
   name: string;
-  gitURL: string;
 };
 
 export const createContestSchema = z.object({
   name: z.string().min(1, { error: "Contest name cannot be empty" }),
-  gitUrl: z.string().min(1, { error: "Git URL cannot be empty" }),
 });
+
+export type CheckStatus = "idle" | "loading" | "success" | "error";
+
+export type RepoChecks = {
+  exists: CheckStatus;
+  isPublic: CheckStatus;
+  isEmpty: CheckStatus;
+};

@@ -19,17 +19,18 @@ import {
 } from "@repo/ui/components/ui/field";
 import { Input } from "@repo/ui/components/ui/input";
 import { useCreateContest } from "../../hooks/mutations";
-import { useTransition } from "react";
-import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const CreateContest = ({ children }: { children: React.ReactNode }) => {
-  const { trigger, isMutating, data } = useCreateContest();
+  const { trigger, isMutating } = useCreateContest();
 
-  const handleFormSubmit = async (formData: FormData) => {
+  const handleFormSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
     const name = formData.get("name") as string;
-    const url = formData.get("url") as string;
 
-    await trigger({ gitURL: url, name });
+    await trigger({ name });
+    toast.success("Contest created succcessfully");
   };
 
   return (
@@ -43,7 +44,7 @@ const CreateContest = ({ children }: { children: React.ReactNode }) => {
           </DialogDescription>
         </DialogHeader>
         <div className="w-full max-w-lg">
-          <form id="create_contest" action={handleFormSubmit}>
+          <form id="create_contest" onSubmit={handleFormSubmit}>
             <FieldGroup>
               <FieldSet>
                 <FieldGroup>
@@ -52,18 +53,6 @@ const CreateContest = ({ children }: { children: React.ReactNode }) => {
                       Contest Name
                     </FieldLabel>
                     <Input id="name" name="name" placeholder="" required />
-                  </Field>
-                  <Field>
-                    <FieldLabel htmlFor="checkout-7j9-card-name-43j">
-                      URL of the repository
-                    </FieldLabel>
-                    <Input
-                      id="url"
-                      name="url"
-                      placeholder=""
-                      required
-                      type="url"
-                    />
                   </Field>
                 </FieldGroup>
               </FieldSet>
@@ -74,14 +63,19 @@ const CreateContest = ({ children }: { children: React.ReactNode }) => {
           <DialogClose asChild>
             <Button variant="outline">Cancel</Button>
           </DialogClose>
-          <Button form="create_contest" type="submit" disabled={isMutating}>
+          <Button
+            form="create_contest"
+            type="submit"
+            disabled={isMutating}
+            className="flex items-center justify-center gap-2 min-w-[120px]"
+          >
             {isMutating ? (
-              <div>
-                <Spinner data-icon="inline-start" />
-                Creating
-              </div>
+              <>
+                <Spinner className="h-4 w-4" />
+                <span>Creating…</span>
+              </>
             ) : (
-              "Create"
+              <span>Create</span>
             )}
           </Button>
         </DialogFooter>

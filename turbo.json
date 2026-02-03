@@ -28,6 +28,12 @@
         "DATABASE_URL",
         "NODE_ENV"
       ]
+    },
+    "db:generate": {
+      "cache": false
+    },
+    "db:migrate": {
+      "cache": false
     }
   }
 }

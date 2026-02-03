@@ -15,12 +15,11 @@ import { ArrowUpRightIcon, ChevronRight, FolderCodeIcon } from "lucide-react";
 import {
   Empty,
   EmptyContent,
-  EmptyDescription,
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
 } from "@repo/ui/components/ui/empty";
-import CreateContest from "../create-contest";
+import CreateContest from "../create-contest/create-contest-button";
 
 const ContestContent = ({
   isLoading,
