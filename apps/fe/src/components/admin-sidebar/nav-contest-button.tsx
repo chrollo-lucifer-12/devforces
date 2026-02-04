@@ -10,7 +10,7 @@ import {
   SidebarMenuSubItem,
 } from "@repo/ui/components/ui/sidebar";
 import { Badge } from "@repo/ui/components/ui/badge";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import {
   ArrowUpRightIcon,
   BadgeCheck,
@@ -24,6 +24,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@repo/ui/components/ui/avatar";
+import Link from "next/link";
 
 export const contestStatusMap = {
   UPCOMING: {
@@ -49,8 +50,8 @@ const NavContestButton = ({ contest }: { contest: Contest }) => {
   const { Icon, className, label } =
     contestStatusMap[contest.contest.status as keyof typeof contestStatusMap];
 
-  const searchParams = useSearchParams();
-  const isActive = searchParams.get("contest") === contest.contest.id;
+  const params = useParams();
+  const isActive = params.contestId === contest.contest.id;
   return (
     <HoverCard openDelay={10} closeDelay={100}>
       <SidebarMenuSub>
@@ -59,12 +60,11 @@ const NavContestButton = ({ contest }: { contest: Contest }) => {
             <SidebarMenuSubButton
               isActive={isActive}
               asChild
-              onClick={() => {
-                router.push(`?contest=${contest.contest.id}`);
-              }}
               className="cursor-pointer"
             >
-              <div className="truncate">{contest.contest.name}</div>
+              <Link href={`/admin/${contest.contest.id}`} className="truncate">
+                {contest.contest.name}
+              </Link>
             </SidebarMenuSubButton>
           </HoverCardTrigger>
           <HoverCardContent className="flex w-64 flex-col gap-1" side="right">

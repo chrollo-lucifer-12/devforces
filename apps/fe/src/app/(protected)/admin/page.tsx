@@ -1,22 +1,7 @@
-import AllContestsPage from "../../../components/all-contests-page";
-import SetupContest from "../../../components/create-contest/setup-contest";
+import { redirect } from "next/navigation";
 
-const AdminPage = async ({
-  searchParams,
-}: {
-  searchParams: Promise<{ contest?: string }>;
-}) => {
-  const { contest } = await searchParams;
-
-  if (contest && contest === "all") {
-    return <AllContestsPage />;
-  }
-
-  return (
-    <div className="flex items-center justify-center h-screen">
-      <SetupContest contestId={contest!} />
-    </div>
-  );
+const AdminPage = () => {
+  redirect("/admin/all");
 };
 
 export default AdminPage;

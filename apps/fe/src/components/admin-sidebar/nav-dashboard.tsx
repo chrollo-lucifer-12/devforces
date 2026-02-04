@@ -5,6 +5,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@repo/ui/components/ui/sidebar";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 
 const NavDashboard = () => {
@@ -22,12 +23,9 @@ const NavDashboard = () => {
           <SidebarMenuSubButton
             isActive={isContestActive}
             asChild
-            onClick={() => {
-              router.push("?contest=all");
-            }}
             className="cursor-pointer"
           >
-            <p>All Contests</p>
+            <Link href={`/admin/all`}>All Contests</Link>
           </SidebarMenuSubButton>
         </SidebarMenuSubItem>
       </SidebarMenuSub>

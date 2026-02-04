@@ -8,18 +8,15 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@repo/ui/components/ui/breadcrumb";
-import { useSearchParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 
 const BreadCrumbs = () => {
-  const searchParams = useSearchParams();
+  const params = useParams();
 
-  const contest = searchParams.get("contest");
-  const challenge = searchParams.get("challenge");
+  const contest = params.contestId;
 
   const homeLabel = "Dashboard";
   const contestLabel = contest && contest !== "all" ? contest : "All Contests";
-  const challengeLabel =
-    challenge && challenge !== "all" ? challenge : "All Challenges";
 
   return (
     <Breadcrumb>
@@ -36,12 +33,6 @@ const BreadCrumbs = () => {
               <BreadcrumbPage>{contestLabel}</BreadcrumbPage>
             </BreadcrumbItem>
           </>
-        )}
-
-        {challenge && (
-          <BreadcrumbItem>
-            <BreadcrumbPage>{challengeLabel}</BreadcrumbPage>
-          </BreadcrumbItem>
         )}
       </BreadcrumbList>
     </Breadcrumb>

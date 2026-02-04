@@ -48,5 +48,4 @@ export type CheckStatus = "idle" | "loading" | "success" | "error";
 export type RepoChecks = {
   exists: CheckStatus;
   isPublic: CheckStatus;
-  isEmpty: CheckStatus;
 };

@@ -2,6 +2,7 @@ import { GitHubIcon } from "@repo/ui/better-auth-ui";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
 } from "@repo/ui/components/ui/card";
@@ -28,11 +29,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { CheckStatus, Contest, RepoChecks } from "../../lib/types";
-import {
-  checkRepoEmpty,
-  checkRepoExists,
-  checkRepoPublic,
-} from "../../lib/fetcher";
+import { checkRepoExists, checkRepoPublic } from "../../lib/fetcher";
 import { useUpdateContest } from "../../hooks/mutations";
 
 const statusIcon = (status: CheckStatus) => {
@@ -58,15 +55,12 @@ const statusBg = (status: CheckStatus) => {
   return "bg-muted";
 };
 
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
 const VerifyRepo = ({ id }: { id: string }) => {
   const { trigger, isMutating } = useUpdateContest(id);
   const [repoUrl, setRepoUrl] = useState("");
   const [checks, setChecks] = useState<RepoChecks>({
     exists: "idle",
     isPublic: "idle",
-    isEmpty: "idle",
   });
 
   const verifyRepo = async (e: any) => {
@@ -74,18 +68,14 @@ const VerifyRepo = ({ id }: { id: string }) => {
     setChecks({
       exists: "loading",
       isPublic: "idle",
-      isEmpty: "idle",
     });
 
     try {
-      await delay(4000);
       const data = await checkRepoExists(repoUrl);
       setChecks((c) => ({ ...c, exists: "success", isPublic: "loading" }));
-      await delay(4000);
+
       await checkRepoPublic(data.private === "false");
       setChecks((c) => ({ ...c, isPublic: "success", isEmpty: "loading" }));
-      await delay(4000);
-      await checkRepoEmpty(parseInt(data.size));
 
       await trigger({ gitUrl: repoUrl, id: id });
       setChecks((c) => ({ ...c, isEmpty: "success" }));
@@ -102,9 +92,16 @@ const VerifyRepo = ({ id }: { id: string }) => {
     <TabsContent value="github-repo" className="flex-1 mt-4">
       <Card className="h-full flex flex-col">
         <CardHeader>
-          <CardTitle className="text-2xl">
-            Create a github repository to continue.
-          </CardTitle>
+          <CardDescription className="text-lg">
+            Make a new repository in your org with{" "}
+            <a
+              href="https://github.com/chrollo-lucifer-12/template-contests"
+              className="underline"
+            >
+              this repo
+            </a>{" "}
+            as the template repo.
+          </CardDescription>
         </CardHeader>
 
         <CardContent className="flex-1">
@@ -165,22 +162,6 @@ const VerifyRepo = ({ id }: { id: string }) => {
                 <ItemMedia>{statusIcon(checks.isPublic)}</ItemMedia>
                 <ItemContent>
                   <ItemTitle>Is the repository public ?</ItemTitle>
-                </ItemContent>
-                <ItemActions>
-                  <ChevronRightIcon className="size-4" />
-                </ItemActions>
-              </a>
-            </Item>
-            <Item
-              variant="outline"
-              size="sm"
-              asChild
-              className={statusBg(checks.isEmpty)}
-            >
-              <a>
-                <ItemMedia>{statusIcon(checks.isEmpty)}</ItemMedia>
-                <ItemContent>
-                  <ItemTitle>Is the repository empty ?</ItemTitle>
                 </ItemContent>
                 <ItemActions>
                   <ChevronRightIcon className="size-4" />

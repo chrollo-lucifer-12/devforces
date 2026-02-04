@@ -8,14 +8,10 @@ export async function GET(req: NextRequest) {
 
   const id = searchParams.get("id");
 
-  let query;
-  if (id === "all" || !id) {
-    query = db.select().from(challenge);
-  } else {
-    query = db.select().from(challenge).where(eq(challenge.id, id));
-  }
-
-  const result = await query;
+  const result = await db
+    .select()
+    .from(challenge)
+    .where(eq(challenge.contestId, id!));
 
   return NextResponse.json(result);
 }

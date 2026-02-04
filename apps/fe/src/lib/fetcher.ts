@@ -25,7 +25,3 @@ export async function checkRepoExists(repoURL: string) {
 export async function checkRepoPublic(privateRepo: boolean) {
   if (privateRepo) throw new Error("Repository is not public");
 }
-
-export async function checkRepoEmpty(size: number) {
-  if (size !== 0) throw new Error("Repsitory is not empty");
-}
