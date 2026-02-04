@@ -11,7 +11,6 @@ import {
   pgEnum,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
-import { primaryKey } from "drizzle-orm/sqlite-core";
 
 export const prismaMigrations = pgTable("_prisma_migrations", {
   id: varchar({ length: 36 }).primaryKey().notNull(),
@@ -163,6 +162,11 @@ export const contestStatusEnum = pgEnum("contest_status", [
   "DRAFT",
 ]);
 
+export const registrationStatusEnum = pgEnum("registration_status", [
+  "REGISTERED",
+  "PARTICIPATING",
+]);
+
 export const contest = pgTable(
   "contest",
   {
@@ -194,7 +198,7 @@ export const registration = pgTable(
   {
     userId: text().notNull(),
     contestId: text().notNull(),
-    isParticipating: boolean(),
+    status: registrationStatusEnum("status").default("REGISTERED"),
   },
   (table) => [
     foreignKey({

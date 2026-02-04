@@ -1,5 +1,5 @@
 "use server";
-
+import { addHours, isBefore } from "date-fns";
 import { CreateContestInput, createContestSchema } from "../lib/types";
 import { db } from "../lib/db";
 import { admin, contest, count, eq } from "@repo/db";
@@ -84,5 +84,60 @@ export const updateContest = async (data: { gitUrl: string; id: string }) => {
       .where(eq(contest.id, data.id));
   } catch (err) {
     throw new Error("");
+  }
+};
+
+export const publishContest = async (data: {
+  id: string;
+  from: string;
+  to: string;
+}) => {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session || !session.user) {
+      redirect("/auth/sign-in");
+    }
+
+    const userId = session.user.id;
+    const [isAdmin] = await db
+      .select({ count: count() })
+      .from(admin)
+      .where(eq(admin.userId, userId));
+
+    if (!isAdmin || !isAdmin?.count) {
+      redirect("/auth/sign-in");
+    }
+
+    const start = new Date(data.from);
+    const end = new Date(data.to);
+
+    if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+      throw new Error("Invalid date format");
+    }
+
+    const minStart = addHours(new Date(), 24);
+
+    if (isBefore(start, minStart)) {
+      throw new Error("Contest must start at least 24 hours from now");
+    }
+
+    if (isBefore(end, start)) {
+      throw new Error("Contest end time must be after start time");
+    }
+
+    await db
+      .update(contest)
+      .set({
+        startDate: start.toISOString(),
+        endDate: end.toISOString(),
+        status: "UPCOMING",
+      })
+      .where(eq(contest.id, data.id));
+  } catch (err) {
+    console.log(err);
+    throw new Error("Internal Server Error");
   }
 };

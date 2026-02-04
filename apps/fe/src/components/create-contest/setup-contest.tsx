@@ -13,6 +13,7 @@ import { useContest } from "../../hooks/queries";
 import SetupContestSkeleton from "./setup-contest-skeleton";
 import AddChallenge from "./add-challenge";
 import { useEffect, useState } from "react";
+import PublishChallenge from "./publish-challenge";
 
 const titles = {
   "github-repo": "Start by setting up a repository",
@@ -53,13 +54,17 @@ const SetupContest = ({ contestId }: { contestId: string }) => {
             <TabsTrigger value="challenges" disabled={isDisabled}>
               <SwordsIcon /> Challenges
             </TabsTrigger>
-            <TabsTrigger value="scoring" disabled={isDisabled}>
-              <CalculatorIcon /> Scoring
+            <TabsTrigger value="publish" disabled={isDisabled}>
+              <CalculatorIcon /> Publish
             </TabsTrigger>
           </TabsList>
 
           <VerifyRepo id={contestId} />
           <AddChallenge contestId={contestId} />
+          <PublishChallenge
+            contestId={contestId}
+            status={contestQuery.data?.[0]?.contest.status!}
+          />
         </Tabs>
       </CardContent>
     </Card>

@@ -118,6 +118,7 @@ const AddChallenge = ({ contestId }: { contestId: string }) => {
           {challengQuery.data?.map((challenge) => {
             return (
               <Item
+                key={challenge.id}
                 variant="outline"
                 className="transition-colors hover:bg-muted/60 cursor-pointer"
               >
