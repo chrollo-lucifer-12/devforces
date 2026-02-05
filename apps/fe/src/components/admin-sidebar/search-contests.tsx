@@ -12,6 +12,7 @@ import {
 import { Skeleton } from "@repo/ui/components/ui/skeleton";
 import { useState, useEffect } from "react";
 import { useContest } from "../../hooks/queries";
+import Link from "next/link";
 
 const SearchContests = () => {
   const [open, setOpen] = useState(false);
@@ -77,7 +78,10 @@ const SearchContests = () => {
                       setName("");
                     }}
                   >
-                    {contest.contest.name}
+                    <Link href={`/admin/${contest.contest.id}`}>
+                      {" "}
+                      {contest.contest.name}
+                    </Link>
                   </CommandItem>
                 ))}
               </CommandGroup>
