@@ -64,6 +64,13 @@
       "when": 1770302434422,
       "tag": "0008_boring_deathstrike",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1770322746717,
+      "tag": "0009_black_blazing_skull",
+      "breakpoints": true
     }
   ]
 }

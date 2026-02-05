@@ -264,6 +264,7 @@ export const submission = pgTable(
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp({ precision: 3, mode: "string" }).notNull(),
+    status: text().notNull(),
   },
   (table) => [
     foreignKey({

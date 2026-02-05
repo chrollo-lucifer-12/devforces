@@ -1,0 +1,1 @@
+ALTER TABLE "submission" ADD COLUMN "status" text NOT NULL;

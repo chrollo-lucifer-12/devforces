@@ -11,9 +11,11 @@
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
+    "@octokit/rest": "^22.0.1",
     "@repo/auth": "*",
     "@repo/db": "*",
     "@repo/ui": "*",
+    "@upstash/redis": "^1.36.2",
     "axios": "^1.13.4",
     "nanoid": "^5.1.6",
     "next": "16.1.6",

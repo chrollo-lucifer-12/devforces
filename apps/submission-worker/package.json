@@ -1,0 +1,22 @@
+{
+  "name": "submission-worker",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "yarn tsx src/index.ts",
+    "start": "tsc -b && node dist/index.js"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "*",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@octokit/rest": "^22.0.1",
+    "@repo/boss": "*",
+    "@repo/db": "*",
+    "@types/dotenv": "^8.2.3",
+    "dotenv": "^17.2.3",
+    "tsx": "^4.21.0"
+  }
+}

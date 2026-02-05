@@ -1,0 +1,14 @@
+{
+  "name": "@repo/boss",
+  "version": "1.0.0",
+  "license": "MIT",
+  "devDependencies": {
+    "@repo/typescript-config": "*"
+  },
+  "dependencies": {
+    "pg-boss": "^12.9.0"
+  },
+  "exports": {
+    "./boss": "./src/index.ts"
+  }
+}
