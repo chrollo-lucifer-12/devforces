@@ -21,8 +21,6 @@ const ContestPage = async ({
 
   const userId = session.user.id;
 
-  // get all challenges get all submissions which have solve as 1
-
   const [contestName] = await db
     .select({
       name: contest.name,
@@ -56,7 +54,13 @@ const ContestPage = async ({
     solved: solvedChallengeIds.has(ch.id),
   }));
 
-  return <LiveChallenge contestName={contestName?.name!} problems={problems} />;
+  return (
+    <LiveChallenge
+      contestId={contestId}
+      contestName={contestName?.name!}
+      problems={problems}
+    />
+  );
 };
 
 export default ContestPage;

@@ -5,11 +5,14 @@ import {
   CardTitle,
 } from "@repo/ui/components/ui/card";
 import { Check } from "lucide-react";
+import Link from "next/link";
 const LiveChallenge = ({
   contestName,
   problems,
+  contestId,
 }: {
   contestName: string;
+  contestId: string;
   problems: { id: string; name: string; solved: boolean }[];
 }) => {
   return (
@@ -26,8 +29,9 @@ const LiveChallenge = ({
           </CardHeader>
           <CardContent className="space-y-3">
             {problems.map((problem) => (
-              <div
+              <Link
                 key={problem.id}
+                href={`/contest/${contestId}/${problem.id}`}
                 className="flex items-center justify-between rounded-lg px-3 py-2 hover:bg-neutral-800 transition"
               >
                 <div className="flex items-center gap-2">
@@ -38,7 +42,7 @@ const LiveChallenge = ({
                     {problem.name}
                   </span>
                 </div>
-              </div>
+              </Link>
             ))}
           </CardContent>
         </Card>
