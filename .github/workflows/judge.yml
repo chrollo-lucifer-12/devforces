@@ -1,0 +1,50 @@
+name: Judge Submission
+
+on:
+  workflow_dispatch:
+    inputs:
+      repo:
+        required: true
+        type: string
+      code:
+        required: true
+        type: string
+
+jobs:
+  judge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+
+    steps:
+      - name: Clone challenge repo
+        run: |
+          git clone https://github.com/${{ github.event.inputs.repo }} challenge
+
+      - name: Inject user code
+        run: |
+          echo "${{ github.event.inputs.code }}" > challenge/src/index.ts
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: |
+          cd challenge
+          npm install
+
+      - name: Run tests
+        run: |
+          cd challenge
+          npm run test
+
+      - name: Count passed tests
+        run: |
+          cd challenge
+          node -e "
+            const fs = require('fs');
+            const results = JSON.parse(fs.readFileSync('test-results.json'));
+            console.log('Passed:', results.numPassedTests);
+            console.log('Failed:', results.numFailedTests);
+          "
