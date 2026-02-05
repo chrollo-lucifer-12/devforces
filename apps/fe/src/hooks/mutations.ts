@@ -2,6 +2,7 @@ import useSWRMutation from "swr/mutation";
 import { toast } from "sonner";
 import {
   createContest,
+  markHiddenContest,
   publishContest,
   updateContest,
 } from "../actions/contest";
@@ -28,6 +29,13 @@ const publishContestFetcher = async (
   { arg }: { arg: { id: string; from: string; to: string } },
 ) => {
   return publishContest(arg);
+};
+
+const hiddenContestFetcher = async (
+  _key: string,
+  { arg }: { arg: { id: string } },
+) => {
+  return markHiddenContest(arg);
 };
 
 export const useCreateContest = () => {
@@ -72,6 +80,21 @@ export const usePublishContest = (id: string) => {
       mutate((key) => typeof key === "string" && key.includes("/api/contest"));
 
       toast.success("Contest was published successfully!");
+    },
+  });
+};
+
+export const useHiddenChallenge = () => {
+  return useSWRMutation(`/api/challenge`, hiddenContestFetcher, {
+    throwOnError: false,
+    onError: (error) => {
+      toast.error(error?.message ?? "Failed to hide contest");
+    },
+    onSuccess: async () => {
+      mutate(
+        (key) => typeof key === "string" && key.includes("/api/challenge"),
+      );
+      toast.success("Challenge hidden successfully!");
     },
   });
 };

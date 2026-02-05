@@ -25,6 +25,7 @@ export type Challenge = {
   statementLink: string;
   createdAt: string;
   updatedAt: string;
+  isHidden: boolean | null;
 };
 
 export type ContestInfo = {

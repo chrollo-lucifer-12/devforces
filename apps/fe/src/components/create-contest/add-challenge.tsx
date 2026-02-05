@@ -17,7 +17,7 @@ import {
   PopoverTrigger,
 } from "@repo/ui/components/ui/popover";
 import { TabsContent } from "@repo/ui/components/ui/tabs";
-import { CodeXmlIcon } from "lucide-react";
+import { CodeXmlIcon, EyeOffIcon, Trash2Icon } from "lucide-react";
 import { useChallenge } from "../../hooks/queries";
 import {
   Item,
@@ -28,9 +28,29 @@ import {
 } from "@repo/ui/components/ui/item";
 import Link from "next/link";
 import { Skeleton } from "@repo/ui/components/ui/skeleton";
+import { useHiddenChallenge } from "../../hooks/mutations";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogMedia,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@repo/ui/components/ui/alert-dialog";
+import { toast } from "sonner";
 
 const AddChallenge = ({ contestId }: { contestId: string }) => {
   const challengQuery = useChallenge(contestId);
+  const { trigger, isMutating } = useHiddenChallenge();
+
+  const handleHideChallenge = async (id: string) => {
+    toast.info("Marking the challenge as hidden");
+    await trigger({ id });
+  };
 
   return (
     <TabsContent value="challenges" className="flex-1 mt-4 h-full">
@@ -120,7 +140,7 @@ const AddChallenge = ({ contestId }: { contestId: string }) => {
               <Item
                 key={challenge.id}
                 variant="outline"
-                className="transition-colors hover:bg-muted/60 cursor-pointer"
+                className={`transition-colors cursor-pointer ${challenge.isHidden ? "border border-yellow-300 " : "border border-green-300 "}`}
               >
                 <ItemContent>
                   <ItemTitle>{challenge.name}</ItemTitle>
@@ -140,6 +160,44 @@ const AddChallenge = ({ contestId }: { contestId: string }) => {
                       View On Github
                     </Link>
                   </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        variant="destructive"
+                        disabled={challenge.isHidden === true || isMutating}
+                      >
+                        {" "}
+                        {challenge.isHidden
+                          ? "Hidden Challenge"
+                          : " Hide Challenge?"}
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent size="sm">
+                      <AlertDialogHeader>
+                        <AlertDialogMedia className="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
+                          <EyeOffIcon />
+                        </AlertDialogMedia>
+                        <AlertDialogTitle>Hide challenge</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This will permanently hide this challege.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel variant="outline">
+                          Cancel
+                        </AlertDialogCancel>
+                        <AlertDialogAction
+                          variant="destructive"
+                          disabled={isMutating}
+                          onClick={() => {
+                            handleHideChallenge(challenge.id);
+                          }}
+                        >
+                          Hide
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </ItemActions>
               </Item>
             );

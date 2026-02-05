@@ -6,7 +6,6 @@ const AllContestsPage = () => {
       <div className="bg-muted/50 flex-1 rounded-xl  p-4 flex flex-col gap-2 overflow-hidden">
         <LiveContests />
         <UpcomingContests />
-        <p>gi</p>
       </div>
     </div>
   );

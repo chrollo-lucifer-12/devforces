@@ -57,6 +57,13 @@
       "when": 1770231759510,
       "tag": "0007_exotic_whistler",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1770302434422,
+      "tag": "0008_boring_deathstrike",
+      "breakpoints": true
     }
   ]
 }

@@ -3,13 +3,14 @@ import { db } from "../../../../../../lib/db";
 import { challenge, test } from "@repo/db";
 import { customAlphabet } from "nanoid";
 import { z } from "zod";
+import { eq, and, inArray } from "drizzle-orm";
 
 const nanoid = customAlphabet("1234567890abcdef", 8);
 
 const challengeSchema = z.object({
-  name: z.string().min(1, "Challenge name required"),
-  statementPath: z.string().min(1, "Statement path required"),
-  testPaths: z.array(z.string()).min(1, "At least one test required"),
+  name: z.string().min(1),
+  statementPath: z.string().min(1),
+  testPaths: z.array(z.string()).min(1),
 });
 
 const bodySchema = z.object({
@@ -34,42 +35,100 @@ export const POST = async (
 
     const { challenges } = parsed.data;
 
-    const challengeData = challenges.map((c) => ({
-      id: nanoid(),
-      contestId,
-      name: c.name.trim(),
-      statementLink: c.statementPath.trim(),
-    }));
-
-    const testData = challengeData.flatMap((challenge) => {
-      const originalChallenge = challenges.find(
-        (c) => c.name.trim() === challenge.name,
-      );
-      return originalChallenge!.testPaths.map((testPath) => ({
-        id: nanoid(),
-        challengeId: challenge.id,
-        testLink: testPath.trim(),
-      }));
-    });
-
     await db.transaction(async (tx) => {
-      await tx.insert(challenge).values(challengeData);
+      const existingChallenges = await tx
+        .select()
+        .from(challenge)
+        .where(eq(challenge.contestId, contestId));
 
-      await tx.insert(test).values(testData);
+      const existingMap = new Map(existingChallenges.map((c) => [c.name, c]));
+
+      const incomingNames = new Set(challenges.map((c) => c.name.trim()));
+
+      const challengesToDelete = existingChallenges
+        .filter((c) => !incomingNames.has(c.name))
+        .map((c) => c.id);
+
+      if (challengesToDelete.length) {
+        // delete tests first
+        await tx
+          .delete(test)
+          .where(inArray(test.challengeId, challengesToDelete));
+
+        await tx
+          .delete(challenge)
+          .where(inArray(challenge.id, challengesToDelete));
+      }
+
+      const challengeIdMap = new Map<string, string>();
+
+      for (const ch of challenges) {
+        const name = ch.name.trim();
+        const statementLink = ch.statementPath.trim();
+
+        const existing = existingMap.get(name);
+
+        if (existing) {
+          // update
+          await tx
+            .update(challenge)
+            .set({ statementLink })
+            .where(eq(challenge.id, existing.id));
+
+          challengeIdMap.set(name, existing.id);
+        } else {
+          const id = nanoid();
+
+          await tx.insert(challenge).values({
+            id,
+            contestId,
+            name,
+            statementLink,
+          });
+
+          challengeIdMap.set(name, id);
+        }
+      }
+
+      for (const ch of challenges) {
+        const challengeId = challengeIdMap.get(ch.name.trim())!;
+
+        const existingTests = await tx
+          .select()
+          .from(test)
+          .where(eq(test.challengeId, challengeId));
+
+        const existingLinks = new Set(existingTests.map((t) => t.testLink));
+
+        const incomingLinks = new Set(ch.testPaths.map((t) => t.trim()));
+
+        const testsToDelete = existingTests
+          .filter((t) => !incomingLinks.has(t.testLink))
+          .map((t) => t.id);
+
+        if (testsToDelete.length) {
+          await tx.delete(test).where(inArray(test.id, testsToDelete));
+        }
+        const testsToInsert = ch.testPaths
+          .map((t) => t.trim())
+          .filter((link) => !existingLinks.has(link))
+          .map((link) => ({
+            id: nanoid(),
+            challengeId,
+            testLink: link,
+          }));
+
+        if (testsToInsert.length) {
+          await tx.insert(test).values(testsToInsert);
+        }
+      }
     });
 
-    return NextResponse.json({
-      success: true,
-      contestId,
-      created: {
-        challenges: challengeData.length,
-        tests: testData.length,
-      },
-    });
+    return NextResponse.json({ success: true });
   } catch (err) {
     console.error("Create challenges error:", err);
     return NextResponse.json(
-      { error: "Failed to create challenges" },
+      { error: "Failed to sync challenges" },
       { status: 500 },
     );
   }

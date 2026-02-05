@@ -225,6 +225,7 @@ export const challenge = pgTable(
     updatedAt: timestamp({ precision: 3, mode: "string" })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
+    isHidden: boolean().default(false),
   },
   (table) => [
     foreignKey({

@@ -76,7 +76,7 @@ const ContestContent = ({
                 <div>
                   <ItemTitle>{contest.contest.name}</ItemTitle>
                   <ItemDescription>
-                    Started at {contest.contest.startDate}
+                    Starting at {contest.contest.startDate}
                   </ItemDescription>
                 </div>
                 <Badge asChild>

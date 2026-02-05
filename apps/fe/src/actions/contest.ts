@@ -2,7 +2,7 @@
 import { addHours, isBefore } from "date-fns";
 import { CreateContestInput, createContestSchema } from "../lib/types";
 import { db } from "../lib/db";
-import { admin, contest, count, eq } from "@repo/db";
+import { admin, challenge, contest, count, eq } from "@repo/db";
 import { auth } from "../lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -138,6 +138,37 @@ export const publishContest = async (data: {
       .where(eq(contest.id, data.id));
   } catch (err) {
     console.log(err);
+    throw new Error("Internal Server Error");
+  }
+};
+
+export const markHiddenContest = async (data: { id: string }) => {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session || !session.user) {
+      redirect("/auth/sign-in");
+    }
+
+    const userId = session.user.id;
+    const [isAdmin] = await db
+      .select({ count: count() })
+      .from(admin)
+      .where(eq(admin.userId, userId));
+
+    if (!isAdmin || !isAdmin?.count) {
+      redirect("/auth/sign-in");
+    }
+
+    await db
+      .update(challenge)
+      .set({
+        isHidden: true,
+      })
+      .where(eq(challenge.id, data.id));
+  } catch (err) {
     throw new Error("Internal Server Error");
   }
 };
