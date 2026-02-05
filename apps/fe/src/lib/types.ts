@@ -18,6 +18,18 @@ export type Contest = {
   };
 };
 
+export type UpcomingContest = {
+  id: string;
+  name: string;
+  creatorId: string;
+  createdAt: string;
+  updatedAt: string;
+  status: "LIVE" | "UPCOMING" | "DRAFT";
+  gitUrl: string;
+  startDate: string | null;
+  endDate: string | null;
+};
+
 export type Challenge = {
   id: string;
   name: string;

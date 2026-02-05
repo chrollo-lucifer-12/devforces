@@ -9,6 +9,7 @@ import {
 import { mutate } from "swr";
 import { CreateContestInput } from "../lib/types";
 import { useRouter } from "next/navigation";
+import { registerContest } from "../actions/registration";
 
 const createContestFetcher = async (
   _key: string,
@@ -36,6 +37,13 @@ const hiddenContestFetcher = async (
   { arg }: { arg: { id: string } },
 ) => {
   return markHiddenContest(arg);
+};
+
+const registerContestFetcher = async (
+  _key: string,
+  { arg }: { arg: { contestId: string } },
+) => {
+  return registerContest(arg);
 };
 
 export const useCreateContest = () => {
@@ -95,6 +103,18 @@ export const useHiddenChallenge = () => {
         (key) => typeof key === "string" && key.includes("/api/challenge"),
       );
       toast.success("Challenge hidden successfully!");
+    },
+  });
+};
+
+export const useRegisterContest = () => {
+  return useSWRMutation(`/api/contest`, registerContestFetcher, {
+    throwOnError: false,
+    onError: (error) => {
+      toast.error(error?.message ?? "Failed to register for the contest.");
+    },
+    onSuccess: () => {
+      toast.success("Registered for the contest.");
     },
   });
 };
