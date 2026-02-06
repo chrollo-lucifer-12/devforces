@@ -33,7 +33,7 @@ export const GET = async (
       registration,
       and(
         eq(registration.contestId, contest.id),
-        eq(registration.isParticipating, true),
+        eq(registration.status, "PARTICIPATING"),
       ),
     )
     .where(eq(contest.id, contestId))
