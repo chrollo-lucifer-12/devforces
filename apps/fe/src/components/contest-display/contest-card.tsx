@@ -142,7 +142,7 @@ export default function ContestSection({
               title={c.name}
               subtitle={c.startDate!}
               startDate={c.startDate!}
-              gradient={gradients[i]}
+              gradient={gradients[i]!}
               contestId={c.id}
             />
           </div>
