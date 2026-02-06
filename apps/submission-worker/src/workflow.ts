@@ -3,7 +3,7 @@ import { Octokit } from "@octokit/rest";
 const octokit = new Octokit({
   auth: process.env.GITHUB_TOKEN,
 });
-const OWNER = "your-username";
+const OWNER = "";
 const REPO = "judge-runner";
 const WORKFLOW = "judge.yml";
 const BRANCH = "main";

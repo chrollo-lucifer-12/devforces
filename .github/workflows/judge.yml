@@ -9,6 +9,9 @@ on:
       code:
         required: true
         type: string
+      challenge_name:
+        required: true
+        type: string
 
 jobs:
   judge:
@@ -22,7 +25,7 @@ jobs:
 
       - name: Inject user code
         run: |
-          echo "${{ github.event.inputs.code }}" > challenge/src/index.ts
+          echo "${{ github.event.inputs.code }}" > challenge/${{ github.event.inputs.challenge_name }}/src/index.ts
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -41,7 +44,7 @@ jobs:
 
       - name: Count passed tests
         run: |
-          cd challenge
+          cd challenge/${{ github.event.inputs.challenge_name }}
           node -e "
             const fs = require('fs');
             const results = JSON.parse(fs.readFileSync('test-results.json'));
