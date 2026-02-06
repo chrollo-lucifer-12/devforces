@@ -47,6 +47,6 @@ jobs:
           cd challenge/${{ github.event.inputs.challenge_name }}
           node -e "
             const fs = require('fs');
-            const results = JSON.parse(fs.readFileSync('test-summary.txt'));
+            const results = fs.readFileSync('test-summary.txt', 'utf-8').trim();
             console.log('Results:', results);
           "
