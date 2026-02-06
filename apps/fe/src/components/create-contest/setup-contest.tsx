@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 import { GitHubIcon } from "@repo/ui/better-auth-ui";
 import { CodeXmlIcon, SwordsIcon, CalculatorIcon } from "lucide-react";

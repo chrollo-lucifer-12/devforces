@@ -1,7 +1,8 @@
 import axios from "axios";
+import { env } from "./env/client";
 
 export const axiosInstance = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: process.env.NEXT_PUBLIC_BASE_URL,
 });
 
 export const fetcher = (url: string) =>
