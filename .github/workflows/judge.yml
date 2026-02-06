@@ -12,11 +12,17 @@ on:
       challenge_name:
         required: true
         type: string
+      submission_id:
+        required: true
+        type: string
+      judge_webhook:
+        required: true
+        type: string
 
 jobs:
   judge:
     runs-on: ubuntu-latest
-    timeout-minutes: 1
+    timeout-minutes: 2
 
     steps:
       - name: Clone challenge repo
@@ -42,11 +48,13 @@ jobs:
           cd challenge/${{ github.event.inputs.challenge_name }}
           npm run test
 
-      - name: Count passed tests
+      - name: Update webhook
         run: |
           cd challenge/${{ github.event.inputs.challenge_name }}
-          node -e "
-            const fs = require('fs');
-            const results = fs.readFileSync('test-summary.txt', 'utf-8').trim();
-            console.log('Results:', results);
-          "
+          RESULTS=$(cat test-summary.txt | tr -d '\n')
+          curl -X POST ${{ github.event.inputs.judge_webhook }} \
+          -H "Content-Type: application/json" \
+          -d '{
+            "submissionId" : "${{ github.event.inputs.submission_id }}",
+            "results": "'"$RESULTS"'"
+          }'

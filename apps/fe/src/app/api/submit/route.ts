@@ -2,13 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "../../../lib/auth";
 import { headers } from "next/headers";
 import { db } from "../../../lib/db";
-import { and, eq, submission } from "@repo/db";
+import { and, challenge, contest, eq, submission } from "@repo/db";
 import { customAlphabet } from "nanoid";
 import { differenceInMinutes } from "date-fns";
 
 import z from "zod";
 import { createBoss } from "@repo/boss/boss";
 import { env } from "../../../lib/env/server";
+import { triggerCI } from "../../../lib/workflow";
 const nanoid = customAlphabet("1234567890abcdef", 8);
 
 const schema = z.object({
@@ -83,7 +84,21 @@ export const POST = async (req: NextRequest) => {
       })
       .returning();
 
-    await boss.send("submission-queue", { id: newSubmission?.id });
+    const [findChallengeName] = await db
+      .select({ name: challenge.name })
+      .from(challenge)
+      .where(eq(challenge.id, challengeId));
+
+    const [findContestRepo] = await db
+      .select({ repo: contest.gitUrl })
+      .from(contest)
+      .where(eq(contest.id, contestId));
+
+    await triggerCI({
+      code,
+      repo: findContestRepo?.repo as string,
+      challenge_name: findChallengeName?.name as string,
+    });
 
     return NextResponse.json({
       success: true,

@@ -4,16 +4,28 @@ import { challenge, contest, eq, submission } from "@repo/db";
 import { createBoss } from "@repo/boss/boss";
 import { db } from "./db";
 
+async function startLogWorker() {
+  const boss = await createBoss(process.env.DATABASE_URL!);
+  await boss.createQueue("read-logs");
+
+  await boss.work("read-logs", async ([job]) => {
+    const { repo } = job?.data as { repo: string };
+
+    console.log("Reading..", repo);
+
+    const [owner, repoName] = repo.split("/");
+  });
+}
+
 async function startJudgeWorker() {
   const boss = await createBoss(process.env.DATABASE_URL!);
-  await boss.start();
 
   await boss.createQueue("submission-queue");
 
   await boss.work("submission-queue", async ([job]) => {
     const { id } = job?.data as { id: string };
 
-    console.log("🚀 Judging", id);
+    console.log(" Judging", id);
 
     try {
       const [newSubmission] = await db
