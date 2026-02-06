@@ -4,16 +4,38 @@ import { headers } from "next/headers";
 import { db } from "../../../lib/db";
 import { submission } from "@repo/db";
 import { customAlphabet } from "nanoid";
-import { boss } from "../../../lib/boss";
+
+import z from "zod";
+import { createBoss } from "@repo/boss/boss";
+import { env } from "../../../lib/env/server";
 const nanoid = customAlphabet("1234567890abcdef", 8);
+
+const schema = z.object({
+  code: z.string().min(1, { error: "code cannot be empty" }),
+  challengeId: z.string().min(1, { error: "challenge id cannot be empty" }),
+  contestId: z.string().min(1, { error: "contest id cannot be empty" }),
+});
 
 export const POST = async (req: NextRequest) => {
   try {
     const body = await req.json();
+    const boss = await createBoss(env.DATABASE_URL);
 
-    const solution = body.code as string;
-    const challengeId = body.challenge as string;
-    const contestId = body.contest as string;
+    const parsedSchema = schema.safeParse({
+      code: body.code,
+      challengeId: body.challengeId,
+      contestId: body.contestId,
+    });
+
+    if (!parsedSchema.success) {
+      console.log(parsedSchema.error.flatten().formErrors);
+      return NextResponse.json(
+        { error: parsedSchema.error.flatten().formErrors },
+        { status: 400 },
+      );
+    }
+
+    const { challengeId, code, contestId } = parsedSchema.data;
 
     const session = await auth.api.getSession({
       headers: await headers(),
@@ -29,10 +51,11 @@ export const POST = async (req: NextRequest) => {
       .values({
         challengeId: challengeId,
         userId,
-        prLinkL: solution,
+        prLinkL: code,
         contestId,
         id: nanoid(),
         updatedAt: new Date().toISOString(),
+        status: "RUNNING",
       })
       .returning();
 
@@ -40,7 +63,6 @@ export const POST = async (req: NextRequest) => {
 
     return NextResponse.json({
       success: true,
-      submission,
       status: "queued",
     });
   } catch (err) {

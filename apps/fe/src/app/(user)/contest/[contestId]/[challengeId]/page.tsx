@@ -27,9 +27,10 @@ export function githubBlobToRaw(url: string): string {
 const ChallengePage = async ({
   params,
 }: {
-  params: Promise<{ challengeId: string }>;
+  params: Promise<{ challengeId: string; contestId: string }>;
 }) => {
-  const { challengeId } = await params;
+  const { challengeId, contestId } = await params;
+
   const [challengeStatement] = await db
     .select({ statementUrl: challenge.statementLink })
     .from(challenge)
@@ -47,7 +48,13 @@ const ChallengePage = async ({
 
   const markdown = await response.text();
 
-  return <ChallengeEditor markdown={markdown} />;
+  return (
+    <ChallengeEditor
+      markdown={markdown}
+      challengeId={challengeId}
+      contestId={contestId}
+    />
+  );
 };
 
 export default ChallengePage;

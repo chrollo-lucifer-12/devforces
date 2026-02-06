@@ -21,7 +21,7 @@ jobs:
     steps:
       - name: Clone challenge repo
         run: |
-          git clone https://github.com/${{ github.event.inputs.repo }} challenge
+          git clone ${{ github.event.inputs.repo }} challenge
 
       - name: Inject user code
         run: |
