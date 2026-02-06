@@ -6,10 +6,14 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@repo/ui/components/ui/resizable";
-import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Markdown from "react-markdown";
-import { axiosInstance } from "../../lib/fetcher";
+import { axiosInstance, fetcher } from "../../lib/fetcher";
+import { useLocalStorage } from "../../hooks/use-localstorage";
+import { useDebounce } from "use-debounce";
+import useSWRMutation from "swr/mutation";
+import { submitFetcher } from "../../hooks/mutations";
+import useSWR from "swr";
 const ChallengeEditor = ({
   markdown,
   challengeId,
@@ -19,27 +23,61 @@ const ChallengeEditor = ({
   contestId: string;
   challengeId: string;
 }) => {
+  const storage = useLocalStorage();
   const [code, setCode] = useState("");
+  const [debouncedCode] = useDebounce(code, 1000);
+  const [submissionId, setSubmissionId] = useState<string | null>(null);
+
+  const { trigger, isMutating } = useSWRMutation("/api/submit", submitFetcher, {
+    onSuccess(data) {
+      setSubmissionId(data.submissionId);
+    },
+  });
+
+  const { data: statusData } = useSWR(
+    submissionId ? `/api/submission-status?id=${submissionId}` : null,
+
+    fetcher,
+
+    {
+      refreshInterval: (data) => {
+        if (!data) return 2000;
+
+        if (data.status !== "FINISHED") {
+          return 2000;
+        }
+
+        return 0;
+      },
+    },
+  );
+
+  useEffect(() => {
+    const saved = storage.get(`${contestId}-${challengeId}`);
+    if (saved) setCode(saved);
+  }, []);
+
+  useEffect(() => {
+    storage.set(`${contestId}-${challengeId}`, debouncedCode);
+  }, [debouncedCode]);
 
   return (
     <ResizablePanelGroup>
       <ResizablePanel minSize={100}>
         <Markdown>{markdown}</Markdown>
         <Button
-          onClick={async () => {
-            if (!code || code.length === 0) return;
-            try {
-              await axiosInstance.post("/api/submit", {
-                code,
-                challengeId,
-                contestId,
-              });
-            } catch (err) {
-              console.log(err);
-            }
+          disabled={isMutating}
+          onClick={() => {
+            if (!code.trim()) return;
+
+            trigger({
+              code,
+              challengeId,
+              contestId,
+            });
           }}
         >
-          Submit
+          {isMutating ? "Submitting..." : "Submit"}
         </Button>
       </ResizablePanel>
       <ResizableHandle />

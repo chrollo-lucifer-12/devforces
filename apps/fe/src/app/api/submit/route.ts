@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "../../../lib/auth";
 import { headers } from "next/headers";
 import { db } from "../../../lib/db";
-import { submission } from "@repo/db";
+import { and, eq, submission } from "@repo/db";
 import { customAlphabet } from "nanoid";
+import { differenceInMinutes } from "date-fns";
 
 import z from "zod";
 import { createBoss } from "@repo/boss/boss";
@@ -46,6 +47,29 @@ export const POST = async (req: NextRequest) => {
 
     const userId = session.user.id;
 
+    const [findSubmission] = await db
+      .select({ id: submission.id, createdAt: submission.createdAt })
+      .from(submission)
+      .where(
+        and(
+          eq(submission.userId, userId),
+          eq(submission.challengeId, challengeId),
+        ),
+      );
+
+    if (findSubmission && findSubmission.id && findSubmission.createdAt) {
+      const diff = differenceInMinutes(
+        new Date(),
+        new Date(findSubmission.createdAt),
+      );
+      if (diff < 5) {
+        return NextResponse.json(
+          { error: "Submission already running within the last 5 minutes" },
+          { status: 400 },
+        );
+      }
+    }
+
     const [newSubmission] = await db
       .insert(submission)
       .values({
@@ -64,6 +88,7 @@ export const POST = async (req: NextRequest) => {
     return NextResponse.json({
       success: true,
       status: "queued",
+      submissionId: newSubmission?.id,
     });
   } catch (err) {
     console.log(err);

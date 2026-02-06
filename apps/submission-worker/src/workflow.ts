@@ -17,3 +17,11 @@ export async function triggerCI(payload: Record<string, string>) {
     inputs: payload,
   });
 }
+
+export async function watchLogs(runId: number) {
+  octokit.actions.downloadWorkflowRunLogs({
+    owner: OWNER,
+    repo: REPO,
+    run_id: runId,
+  });
+}

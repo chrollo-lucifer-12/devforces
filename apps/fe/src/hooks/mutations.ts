@@ -10,6 +10,7 @@ import { mutate } from "swr";
 import { CreateContestInput } from "../lib/types";
 import { useRouter } from "next/navigation";
 import { registerContest } from "../actions/registration";
+import { axiosInstance } from "../lib/fetcher";
 
 const createContestFetcher = async (
   _key: string,
@@ -44,6 +45,14 @@ const registerContestFetcher = async (
   { arg }: { arg: { contestId: string } },
 ) => {
   return registerContest(arg);
+};
+
+export const submitFetcher = async (
+  _key: string,
+  { arg }: { arg: { code: string; challengeId: string; contestId: string } },
+) => {
+  const res = await axiosInstance.post("/api/submit", arg);
+  return res.data;
 };
 
 export const useCreateContest = () => {
