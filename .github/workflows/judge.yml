@@ -34,12 +34,12 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd challenge
+          cd challenge/${{ github.event.inputs.challenge_name }}
           npm install
 
       - name: Run tests
         run: |
-          cd challenge
+          cd challenge/${{ github.event.inputs.challenge_name }}
           npm run test
 
       - name: Count passed tests
@@ -47,7 +47,6 @@ jobs:
           cd challenge/${{ github.event.inputs.challenge_name }}
           node -e "
             const fs = require('fs');
-            const results = JSON.parse(fs.readFileSync('test-results.json'));
-            console.log('Passed:', results.numPassedTests);
-            console.log('Failed:', results.numFailedTests);
+            const results = JSON.parse(fs.readFileSync('test-summary.txt'));
+            console.log('Results:', results);
           "
