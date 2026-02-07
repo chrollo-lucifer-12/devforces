@@ -9,6 +9,7 @@ import {
   boolean,
   foreignKey,
   pgEnum,
+  primaryKey,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
@@ -280,4 +281,29 @@ export const submission = pgTable(
       foreignColumns: [contest.id],
     }),
   ],
+);
+
+export const leaderboard = pgTable(
+  "leaderboard",
+  {
+    contestId: text().notNull(),
+    userId: text().notNull(),
+    score: integer(),
+    createdAt: timestamp({ precision: 3, mode: "string" })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+  },
+  (table) => ({
+    pk: primaryKey({ columns: [table.contestId, table.userId] }),
+
+    contestScoreIdx: index("leaderboard_contest_score_idx").on(
+      table.contestId,
+      table.score,
+    ),
+
+    contestUserIdx: index("leaderboard_contest_user_idx").on(
+      table.contestId,
+      table.userId,
+    ),
+  }),
 );
