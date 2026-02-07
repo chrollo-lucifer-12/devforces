@@ -18,3 +18,9 @@ export function useChallenge(id: string) {
 export function useContestInfo(id: string | null = null) {
   return useSWR<ContestInfo>(id ? `/api/contest/info/${id}` : null);
 }
+
+export function useTimer(id: string) {
+  return useSWR<{ timeLeft: number }>(`/api/timer/${id}`, {
+    refreshInterval: 5000,
+  });
+}

@@ -7,8 +7,6 @@ import { customAlphabet } from "nanoid";
 import { differenceInMinutes } from "date-fns";
 
 import z from "zod";
-import { createBoss } from "@repo/boss/boss";
-import { env } from "../../../lib/env/server";
 import { triggerCI } from "../../../lib/workflow";
 const nanoid = customAlphabet("1234567890abcdef", 8);
 
@@ -21,7 +19,6 @@ const schema = z.object({
 export const POST = async (req: NextRequest) => {
   try {
     const body = await req.json();
-    const boss = await createBoss(env.DATABASE_URL);
 
     const parsedSchema = schema.safeParse({
       code: body.code,
@@ -98,6 +95,8 @@ export const POST = async (req: NextRequest) => {
       code,
       repo: findContestRepo?.repo as string,
       challenge_name: findChallengeName?.name as string,
+      submission_id: newSubmission?.id as string,
+      judge_webhook: "https://devforces-fe.vercel.app/api/judge/result",
     });
 
     return NextResponse.json({

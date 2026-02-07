@@ -31,7 +31,7 @@ function ContestCard({
   gradient: string;
   contestId: string;
 }) {
-  const timeLeft = "0";
+  const timer = useCountdown(contestId);
   const { trigger, isMutating } = useRegisterContest();
   const router = useRouter();
 
@@ -39,14 +39,13 @@ function ContestCard({
     <Card
       className={`relative overflow-hidden border-none text-white ${gradient} rounded-3xl cursor-pointer`}
       onClick={() => {
-        if (timeLeft !== "0") return;
         router.push(`/contest/${contestId}`);
       }}
     >
       <CardContent className="p-0">
         <div className="absolute right-4 top-4 flex items-center gap-2 rounded-full bg-white/20 px-3 py-1 text-sm backdrop-blur">
           <Hourglass size={16} />
-          {timeLeft === "0" ? "Live" : timeLeft}
+          {timer}
         </div>
 
         <div className="h-[150px] w-full flex items-center justify-center">

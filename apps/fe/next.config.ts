@@ -14,6 +14,15 @@ import { ClientEnvSchema, ServerEnvSchema } from "@repo/validator";
 const nextConfig: NextConfig = {
   /* config options here */
   reactCompiler: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "avatars.githubusercontent.com",
+        port: "",
+      },
+    ],
+  },
 };
 
 export default nextConfig;

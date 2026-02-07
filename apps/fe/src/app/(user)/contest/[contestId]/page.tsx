@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { db } from "../../../../lib/db";
 import { and, challenge, contest, eq, submission } from "@repo/db";
 import LiveChallenge from "../../../../components/live-challenge";
+import { axiosInstance } from "../../../../lib/fetcher";
 
 const ContestPage = async ({
   params,
@@ -54,11 +55,14 @@ const ContestPage = async ({
     solved: solvedChallengeIds.has(ch.id),
   }));
 
+  const leaderboard = await axiosInstance.get(`/api/leaderboard/${contestId}`);
+
   return (
     <LiveChallenge
       contestId={contestId}
       contestName={contestName?.name!}
       problems={problems}
+      leaderboard={leaderboard.data.top10}
     />
   );
 };
